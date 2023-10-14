@@ -5,7 +5,6 @@ using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-
 namespace WpfGenericHost;
 
 public class SomeViewModel : INotifyPropertyChanged
@@ -13,7 +12,8 @@ public class SomeViewModel : INotifyPropertyChanged
     private readonly ILogger<SomeViewModel> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public SomeViewModel(ITextService textService, ILogger<SomeViewModel> logger, IServiceScopeFactory serviceScopeFactory)
+    public SomeViewModel(ITextService textService, ILogger<SomeViewModel> logger,
+        IServiceScopeFactory serviceScopeFactory)
     {
         _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
@@ -22,16 +22,16 @@ public class SomeViewModel : INotifyPropertyChanged
         OpenAnotherWindowCommand = new RelayCommand(Alma);
     }
 
+    public string Text { get; set; }
+    public ICommand OpenAnotherWindowCommand { get; set; }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     private void Alma()
     {
         var anotherWindow = _serviceScopeFactory.CreateScope().ServiceProvider.GetService<AnotherWindow>();
         anotherWindow.Show();
     }
-
-    public string Text { get; set; }
-    public ICommand OpenAnotherWindowCommand { get; set; }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
